@@ -22,6 +22,7 @@ public class BackPropagation {
 	public class SummaryStatistics{
 		public double totalError;
 		public int epoch, amountRight;
+		public double percentageRight;
 	}
 	SummaryStatistics statistics;
 	private double learningRate;
@@ -39,7 +40,6 @@ public class BackPropagation {
 	public void step(){
 		statistics.epoch++;
 		for (DataElement d : trainingData){
-			System.out.println("d.getInput() " +Arrays.deepToString(GenUtil.toDoubleArray(d.getInput())));
 			nn.setInput(d.getInput());
 			nn.computeOutput();
 			double[] idealOut = d.getPerfectOutput();
@@ -187,11 +187,11 @@ public class BackPropagation {
 		}
 		if (debug)
 			stream.println(statistics.amountRight  + " right out of " + trainingData.size());
+		statistics.percentageRight = (double)statistics.amountRight / trainingData.size();
 		if (statistics.amountRight > bestPerformer){
 			bestPerformer = statistics.amountRight;
 		}
 		averageSquaredError /= trainingData.size();
-//		statistics.amountRight = statistics.amountRight / trainingData.size();
 	}
 
 

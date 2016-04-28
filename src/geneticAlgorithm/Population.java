@@ -13,16 +13,14 @@ public class Population {
 	private NeuralNetworkWrapper[] population;
 	private int size, generation;
 	private double mutationRate, averageError;
-	private TrainingData targetData;
 	int maxIteration = 1;
 	
-	public Population(int popSize, TrainingData td, double mutationRate) {
+	public Population(int popSize, double mutationRate) {
 		population = new NeuralNetworkWrapper[popSize];
-		this.targetData = td;
 		this.mutationRate = mutationRate;
 		this.size = popSize;
 		for (int i = 0; i < popSize; i++){
-			population[i] = new NeuralNetworkWrapper(GenUtil.createNet(targetData));
+			population[i] = new NeuralNetworkWrapper(GenUtil.createNet());
 		}
 		generation = 1;
 	}
@@ -37,6 +35,7 @@ public class Population {
 			bp.trainFor(maxIteration);
 			bp.runTestDiagnostics(null, false);
 			nwp.setAmountRight(bp.getSummaryStatistics().amountRight);
+			nwp.setPercentageCorrect(bp.getSummaryStatistics().percentageRight);
 			averageError += bp.getSummaryStatistics().totalError;
 		}
 		averageError /= population.length;
@@ -44,7 +43,6 @@ public class Population {
 		NeuralNetworkWrapper fittest = getHighestPerformer();
 		for (int j = 0; j < population.length; j++) {
 			NeuralNetworkWrapper neuralNet = population[j];
-//			System.out.println(gradeFitness(neuralNet, fittest));
 			neuralNet.setFitness(gradeFitness(neuralNet, fittest));
 		}
 		
@@ -76,7 +74,6 @@ public class Population {
 
 	public static <T extends Rankable> T selectMate(T[] population) {
 		T choice = null;
-
 		while (choice == null){
 			int pos = (int)(Math.random() * population.length);
 			if (Math.random() < population[pos].getFitness()){
@@ -102,7 +99,6 @@ public class Population {
 		NeuralNetworkWrapper greatest = population[0];
 		for (int i = 0; i < population.length; i++) {
 			NeuralNetworkWrapper current = population[i];
-//			System.out.println("amount right " + current.getAmountRight());
 			if (current.getAmountRight() > greatest.getAmountRight()){
 				greatest = current;
 			}

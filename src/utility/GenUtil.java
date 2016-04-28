@@ -18,12 +18,22 @@ public class GenUtil {
 		return doubleArr;
 	}
 
-	public static NeuralNetwork createNet(TrainingData td) {
+	public static NeuralNetwork deriveNet(TrainingData td) {
 		int inputSize = td.getElement(0).getInput().length;
 		NeuralNetwork nn = new NeuralNetwork(inputSize);
-//		nn.addLayer((int)(Math.random() * 70) + 50, false);
 		nn.addLayer((int)(Math.random() * 30) + 10, false);
 		nn.addLayer(td.getElement(0).getPerfectOutput().length, false);
+		return nn;
+	}
+	
+	public static NeuralNetwork createNet(){
+		int gDays = (int)(Math.random() * 100) + 30;
+		int sDays = (int)(Math.random() * 100) + 30;
+		NeuralNetwork nn = new NeuralNetwork(gDays + sDays);
+		nn.setNumSilverDays(sDays);
+		nn.setNumGoldDays(gDays);
+		nn.addLayer((int)(Math.random() * 30) + 10, false);
+		nn.addLayer(1, false);
 		return nn;
 	}
 	

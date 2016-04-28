@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 import training.BackPropagation;
 import training.TrainingData;
+import basicNetwork.NeuralNetwork;
 
 public class GoldSilverRunner {
 	/**
@@ -22,19 +23,16 @@ public class GoldSilverRunner {
 	 * 750 data points (each consists of two entities, so 1500 is how many data elements would be built into a training data set)
 	 */
 	public static final String THREE_YEARS = "trimmed_only_goldsilver.txt";
-	static int GA_ITERATIONS = 35;
+	static int GA_ITERATIONS = 20;
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		final PrintWriter writer = new PrintWriter("send_me_this_bro.txt", "UTF-8");
 		File f = new File(THREE_YEARS);
-		TrainingData td = parseGoldAndSilver(f, 200, 1);
-		Population pop = new Population(8, td, 0.0);
+		Population pop = new Population(65, 0.05);
 		writer.println(pop.getSize() + "-size population");
-		writer.println(td.size() + "-size training data set");
 		writer.println("Spawning GA and ANNs...");
 
 		System.out.println(pop.getSize() + "-size population");
-		System.out.println(td.size() + "-size training data set");
 		System.out.println("Spawning GA and ANNs...");
 
 		for (int i = 0; i < GA_ITERATIONS; i++){
@@ -42,13 +40,13 @@ public class GoldSilverRunner {
 			pop.setFitnessLevels();
 			writer.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
 			System.out.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
-			writer.println(pop.getGeneration() + "\t" + pop.getHighestPerformer().getAmountRight() / (double)td.size());
+			writer.println(pop.getGeneration() + "\t" + pop.getHighestPerformer().getPercentageCorrect());
 			pop.evolveNextGeneration();
 		}
 		pop.setFitnessLevels();
-		BackPropagation bp = new BackPropagation(pop.getFittest().getSolution(), td);
+		NeuralNetwork overallFit = pop.getFittest().getSolution();
+		BackPropagation bp = new BackPropagation(overallFit, TrainingData.produceValidTrainingSet(overallFit, 1));
 		bp.trainFor(100);
-		//		writeOutputTo(bp, "finished_file.txt");
 		writer.println("best " + BackPropagation.bestPerformer);
 		writer.close();
 	}

@@ -4,7 +4,7 @@ import basicNetwork.NeuralNetwork;
 
 public class NeuralNetworkWrapper extends CandidateWrapper<NeuralNetwork>{
 
-	private double totalError;
+	private double totalError, percentageCorrect;
 	private int amountRight;
 
 	public NeuralNetworkWrapper(NeuralNetwork nn) {
@@ -34,5 +34,13 @@ public class NeuralNetworkWrapper extends CandidateWrapper<NeuralNetwork>{
 
 	public void setAmountRight(int amountRight) {
 		this.amountRight = amountRight;
+	}
+
+	public double getPercentageCorrect() {
+		return percentageCorrect;
+	}
+
+	public void setPercentageCorrect(double percentageCorrect) {
+		this.percentageCorrect = percentageCorrect;
 	}
 }

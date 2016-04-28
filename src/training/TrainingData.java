@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import utility.GenUtil;
 import basicNetwork.NeuralNetwork;
 
 /**
@@ -41,12 +42,8 @@ public class TrainingData implements Collection<DataElement>{
 			(x % 2 == 0 ? silverValues : goldValues).add(Double.valueOf(line));
 			x++;
 		}
-//		System.out.println(silverValues.toString());
-//		System.out.println("goldValues.toString() " + goldValues.toString());
-//		silverValues = GenUtil.onesAndZeroes(silverValues);
-//		goldValues = GenUtil.onesAndZeroes(goldValues);
-//		goldValues = Arrays.asList(1.0, 1.0, 0.0, 0.0, 1.0, 0.0);
-//		silverValues = Arrays.asList(1.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		silverValues = GenUtil.onesAndZeroes(silverValues);
+		goldValues = GenUtil.onesAndZeroes(goldValues);
 	}
 
 	@Override
