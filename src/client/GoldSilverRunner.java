@@ -28,7 +28,7 @@ public class GoldSilverRunner {
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
 		final PrintWriter writer = new PrintWriter("send_me_this_bro.txt", "UTF-8");
 		File f = new File(THREE_YEARS);
-		Population pop = new Population(65, 0.05);
+		Population pop = new Population(5, 0.05, .01);
 		writer.println(pop.getSize() + "-size population");
 		writer.println("Spawning GA and ANNs...");
 
@@ -38,9 +38,10 @@ public class GoldSilverRunner {
 		for (int i = 0; i < GA_ITERATIONS; i++){
 			System.out.println("setting fitness levels");
 			pop.setFitnessLevels();
-			writer.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
 			System.out.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
-			writer.println(pop.getGeneration() + "\t" + pop.getHighestPerformer().getPercentageCorrect());
+			System.out.println(pop.getGeneration() + "\t" + pop.getGenerationalFitnesses().get(pop.getGenerationalFitnesses().size()-1));
+			writer.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
+			writer.println(pop.getGeneration() + "\t" + pop.getGenerationalFitnesses().get(pop.getGenerationalFitnesses().size()-1));
 			pop.evolveNextGeneration();
 		}
 		pop.setFitnessLevels();

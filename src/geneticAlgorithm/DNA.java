@@ -64,7 +64,13 @@ public class DNA {
 	}
 
 	public void mutate(double rate){
-		//		throw new Exception("Not Implemented!");
+		if (Math.random() < rate){
+			System.out.println("MUTATING...");
+			int geneToChange = (int) (2 + (Math.random() * (genes.length-3)));
+			int newVal = this.genes[geneToChange];
+			newVal = (int) (newVal + Math.random() * 10.0);
+			this.genes[geneToChange] = newVal;
+		}
 	}
 
 	public NeuralNetwork toANN() {

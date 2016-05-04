@@ -1,5 +1,7 @@
 package geneticAlgorithm;
 
+import java.util.ArrayList;
+
 import training.BackPropagation;
 import training.TrainingData;
 import utility.GenUtil;
@@ -12,10 +14,11 @@ import utility.GenUtil;
 public class Population {
 	private NeuralNetworkWrapper[] population;
 	private int size, generation;
-	private double mutationRate, averageError;
+	private double mutationRate, averageError, throttleRate;
 	int maxIteration = 1;
+	ArrayList<Double> generationalFitnesses;
 	
-	public Population(int popSize, double mutationRate) {
+	public Population(int popSize, double mutationRate, double throttleRate) {
 		population = new NeuralNetworkWrapper[popSize];
 		this.mutationRate = mutationRate;
 		this.size = popSize;
@@ -23,6 +26,8 @@ public class Population {
 			population[i] = new NeuralNetworkWrapper(GenUtil.createNet());
 		}
 		generation = 1;
+		this.throttleRate = throttleRate;
+		generationalFitnesses = new ArrayList<Double>();
 	}
 	
 	//LET ALL ANNs HAVE SOME TIME TO TRAIN, THEM PERFORM A DIAGNOSTIC TEST AND SET FITNESS LEVELS IN PROPORTION TO THAT
@@ -45,7 +50,7 @@ public class Population {
 			NeuralNetworkWrapper neuralNet = population[j];
 			neuralNet.setFitness(gradeFitness(neuralNet, fittest));
 		}
-		
+		generationalFitnesses.add(this.getHighestPerformer().getPercentageCorrect());
 	}
 
 	private double gradeFitness(NeuralNetworkWrapper current, NeuralNetworkWrapper great) {
@@ -120,5 +125,9 @@ public class Population {
 
 	public int getGeneration() {
 		return generation;
+	}
+
+	public ArrayList<Double> getGenerationalFitnesses() {
+		return generationalFitnesses;
 	}
 }
