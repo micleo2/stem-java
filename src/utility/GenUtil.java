@@ -1,6 +1,7 @@
 package utility;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import training.TrainingData;
@@ -75,6 +76,18 @@ public class GenUtil {
 			values.set(i, values.get(i) / largest);
 		}
 		return values;
+	}
+	
+	public static String toSimpleString(Calendar instance){
+		StringBuilder sb = new StringBuilder();
+		/*APPEND DATE*/
+		sb.append(String.valueOf(instance.get(Calendar.MONTH) + 1) + "-");
+		sb.append(String.valueOf(instance.get(Calendar.DAY_OF_MONTH)) + "-");
+		sb.append(String.valueOf(instance.get(Calendar.YEAR)).substring(2) + "$");
+		/*APPEND TIME*/
+		sb.append(String.valueOf(instance.get(Calendar.HOUR)) + "$");
+		sb.append(String.valueOf(instance.get(Calendar.MINUTE)));
+		return sb.toString();
 	}
 	
 	@SuppressWarnings("unchecked")

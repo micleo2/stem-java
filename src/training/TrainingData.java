@@ -70,7 +70,6 @@ public class TrainingData implements Collection<DataElement>{
 	 */
 	public static TrainingData produceValidTrainingSet(NeuralNetwork nn, int timeStep){
 		if (TrainingData.trainingDataCache.containsKey(nn)){
-			System.out.println("CACHED VALUE RETRIEVED, COMPUTING RESULT AVOIDED...");
 			return trainingDataCache.get(nn);
 		}
 		TrainingData td = new TrainingData();

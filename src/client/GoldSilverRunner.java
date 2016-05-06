@@ -4,14 +4,20 @@ import geneticAlgorithm.Population;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
 import training.BackPropagation;
 import training.TrainingData;
+import utility.GenUtil;
 import basicNetwork.NeuralNetwork;
 
 public class GoldSilverRunner {
@@ -19,19 +25,20 @@ public class GoldSilverRunner {
 	 * 1540 data points (each consists of two entities, so 3080 is how many data elements would be built into a training data set)
 	 */
 	public static final String SIX_YEARS = "only_goldsilver.txt";
+	public static final String OUTPUT_PATH = System.getProperty("user.dir") + "/" + GenUtil.toSimpleString(Calendar.getInstance()) + ".txt";
 	/**
 	 * 750 data points (each consists of two entities, so 1500 is how many data elements would be built into a training data set)
 	 */
 	public static final String THREE_YEARS = "trimmed_only_goldsilver.txt";
 	static int GA_ITERATIONS = 20;
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
-		final PrintWriter writer = new PrintWriter("send_me_this_bro.txt", "UTF-8");
-		File f = new File(THREE_YEARS);
+	public static void main(String[] args) throws IOException{
 		Population pop = new Population(5, 0.05, .01);
-		writer.println(pop.getSize() + "-size population");
-		writer.println("Spawning GA and ANNs...");
-
+		File f = new File(OUTPUT_PATH);
+		f.createNewFile();
+		Files.write(Paths.get(OUTPUT_PATH), (pop.getSize() + "-size population\n").getBytes(), StandardOpenOption.APPEND);
+		Files.write(Paths.get(OUTPUT_PATH), ("Spawning GA and ANNs...\n").getBytes(), StandardOpenOption.APPEND);
+		
 		System.out.println(pop.getSize() + "-size population");
 		System.out.println("Spawning GA and ANNs...");
 
@@ -40,16 +47,14 @@ public class GoldSilverRunner {
 			pop.setFitnessLevels();
 			System.out.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
 			System.out.println(pop.getGeneration() + "\t" + pop.getGenerationalFitnesses().get(pop.getGenerationalFitnesses().size()-1));
-			writer.println(pop.getGeneration() + " out of " + GA_ITERATIONS);
-			writer.println(pop.getGeneration() + "\t" + pop.getGenerationalFitnesses().get(pop.getGenerationalFitnesses().size()-1));
+			Files.write(Paths.get(OUTPUT_PATH), (pop.getGeneration() + "\t" + pop.getGenerationalFitnesses().get(pop.getGenerationalFitnesses().size()-1) + "\n").getBytes(), StandardOpenOption.APPEND);
 			pop.evolveNextGeneration();
 		}
 		pop.setFitnessLevels();
 		NeuralNetwork overallFit = pop.getFittest().getSolution();
 		BackPropagation bp = new BackPropagation(overallFit, TrainingData.produceValidTrainingSet(overallFit, 1));
 		bp.trainFor(100);
-		writer.println("best " + BackPropagation.bestPerformer);
-		writer.close();
+		Files.write(Paths.get(OUTPUT_PATH), ("best " + BackPropagation.bestPerformer).getBytes(), StandardOpenOption.APPEND);
 	}
 
 	public static void writeOutputTo(BackPropagation backprop, String fileName) throws FileNotFoundException, UnsupportedEncodingException{
@@ -57,6 +62,8 @@ public class GoldSilverRunner {
 		backprop.runTestDiagnostics((s) -> writer.println(s), true);
 		writer.close();
 	}
+	
+	
 
 	/**
 	 * @param file
